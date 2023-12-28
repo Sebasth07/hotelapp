@@ -3,14 +3,18 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppLayoutModule } from './layout/app.layout.module';
-import { NotfoundComponent } from './demo/components/notfound/notfound.component';
-import { ProductService } from './demo/service/product.service';
-import { CountryService } from './demo/service/country.service';
-import { CustomerService } from './demo/service/customer.service';
-import { EventService } from './demo/service/event.service';
-import { IconService } from './demo/service/icon.service';
-import { NodeService } from './demo/service/node.service';
-import { PhotoService } from './demo/service/photo.service';
+import { NotfoundComponent } from './content/components/notfound/notfound.component';
+import { ProductService } from './content/service/product.service';
+import { CountryService } from './content/service/country.service';
+import { CustomerService } from './content/service/customer.service';
+import { EventService } from './content/service/event.service';
+import { IconService } from './content/service/icon.service';
+import { NodeService } from './content/service/node.service';
+import { PhotoService } from './content/service/photo.service';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthService } from './content/service/auth.service';
+import { UsersService } from './content/service/admin/users.service';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 
 @NgModule({
     declarations: [
@@ -18,12 +22,15 @@ import { PhotoService } from './demo/service/photo.service';
     ],
     imports: [
         AppRoutingModule,
-        AppLayoutModule
+        AppLayoutModule,
+        HttpClientModule,
+        SweetAlert2Module.forRoot()
     ],
     providers: [
-        { provide: LocationStrategy, useClass: HashLocationStrategy },
-        CountryService, CustomerService, EventService, IconService, NodeService,
-        PhotoService, ProductService
+        
+        AuthService,
+        UsersService,
+        ProductService
     ],
     bootstrap: [AppComponent]
 })

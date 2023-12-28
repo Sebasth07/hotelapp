@@ -1,24 +1,33 @@
 import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { NotfoundComponent } from './demo/components/notfound/notfound.component';
+import { NotfoundComponent } from './content/components/notfound/notfound.component';
 import { AppLayoutComponent } from "./layout/app.layout.component";
+import { LandingComponent } from './content/components/landing/landing.component';
+import { LoginGuard } from './content/guards/login.guard';
+import { LoginBlockGuard } from './content/guards/loginblock.guard';
 
 @NgModule({
     imports: [
         RouterModule.forRoot([
             {
-                path: '', component: AppLayoutComponent,
+                path: '', component: LandingComponent,
                 children: [
-                    { path: '', loadChildren: () => import('./demo/components/dashboard/dashboard.module').then(m => m.DashboardModule) },
-                    { path: 'uikit', loadChildren: () => import('./demo/components/uikit/uikit.module').then(m => m.UIkitModule) },
-                    { path: 'utilities', loadChildren: () => import('./demo/components/utilities/utilities.module').then(m => m.UtilitiesModule) },
-                    { path: 'documentation', loadChildren: () => import('./demo/components/documentation/documentation.module').then(m => m.DocumentationModule) },
-                    { path: 'blocks', loadChildren: () => import('./demo/components/primeblocks/primeblocks.module').then(m => m.PrimeBlocksModule) },
-                    { path: 'pages', loadChildren: () => import('./demo/components/pages/pages.module').then(m => m.PagesModule) }
+                    { path: '', loadChildren: () => import('./content/components/landing/landing.module').then(m => m.LandingModule) },
                 ]
+                
             },
-            { path: 'auth', loadChildren: () => import('./demo/components/auth/auth.module').then(m => m.AuthModule) },
-            { path: 'landing', loadChildren: () => import('./demo/components/landing/landing.module').then(m => m.LandingModule) },
+            {path:'dashboard', component: AppLayoutComponent,
+                children: [
+                    { path: '', loadChildren: () => import('./content/components/dashboard/dashboard.module').then(m => m.DashboardModule) },
+                    { path: 'admin/users', loadChildren: () => import('./content/components/admin/users/users.module').then(m => m.UsersModule) },
+                    { path: 'admin/hotels', loadChildren: () => import('./content/components/admin/hotels/hotels.module').then(m => m.HotelsModule) }
+                    
+
+                ],
+                canActivate: [LoginGuard]
+            },
+            
+            { path: 'auth', loadChildren: () => import('./content/components/auth/auth.module').then(m => m.AuthModule), canActivate: [LoginBlockGuard] },
             { path: 'notfound', component: NotfoundComponent },
             { path: '**', redirectTo: '/notfound' },
         ], { scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled', onSameUrlNavigation: 'reload' })
